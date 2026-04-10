@@ -112,12 +112,8 @@
       gap: 8px;
     }
     .theme-btn .emoji { font-size: 2.2rem; }
-    .theme-btn:nth-child(1) { background: linear-gradient(135deg, #f093fb, #f5576c); }
-    .theme-btn:nth-child(2) { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-    .theme-btn:nth-child(3) { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a6650; }
-    .theme-btn:nth-child(4) { background: linear-gradient(135deg, #f7971e, #ffd200); color: #6b4800; }
-    .theme-btn:nth-child(5) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); grid-column: span 2; }
     .theme-btn:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .theme-grid > .theme-btn:last-child:nth-child(odd) { grid-column: span 2; }
     .theme-btn:active { transform: scale(0.97); }
 
     /* Progress bar */
@@ -262,11 +258,17 @@
 <script>
 // ─── QUIZ DATA ───────────────────────────────────────────────────────────────
 const temaer = [
-  { id: 'dyr',    navn: 'Dyr',             emoji: '🐾' },
-  { id: 'farger', navn: 'Farger & former', emoji: '🎨' },
-  { id: 'tall',   navn: 'Tall & matte',    emoji: '🔢' },
-  { id: 'natur',  navn: 'Natur',           emoji: '🌿' },
-  { id: 'mat',    navn: 'Mat',             emoji: '🍎' },
+  { id: 'dyr',       navn: 'Dyr',             emoji: '🐾', grad: '#f093fb,#f5576c',   tekst: 'white' },
+  { id: 'farger',    navn: 'Farger & former', emoji: '🎨', grad: '#4facfe,#00b4db',   tekst: 'white' },
+  { id: 'tall',      navn: 'Tall & matte',    emoji: '🔢', grad: '#43e97b,#38f9d7',   tekst: '#1a5c45' },
+  { id: 'natur',     navn: 'Natur',           emoji: '🌿', grad: '#f7971e,#ffd200',   tekst: '#6b4800' },
+  { id: 'mat',       navn: 'Mat',             emoji: '🍎', grad: '#a18cd1,#7c6dc0',   tekst: 'white' },
+  { id: 'kroppen',   navn: 'Kroppen',         emoji: '🫀', grad: '#fc5c7d,#6a3093',   tekst: 'white' },
+  { id: 'transport', navn: 'Transport',       emoji: '🚀', grad: '#1a78c2,#4facfe',   tekst: 'white' },
+  { id: 'sport',     navn: 'Sport',           emoji: '⚽', grad: '#f46b45,#eea849',   tekst: '#6b3000' },
+  { id: 'eventyr',   navn: 'Eventyr',         emoji: '🧚', grad: '#6c5ce7,#a29bfe',   tekst: 'white' },
+  { id: 'yrker',     navn: 'Yrker',           emoji: '👷', grad: '#00b894,#00cec9',   tekst: 'white' },
+  { id: 'arkeologi', navn: 'Arkeologi',       emoji: '🏺', grad: '#b5651d,#f4a460',   tekst: 'white' },
 ];
 
 function alderTilNivå(alder) {
@@ -470,6 +472,240 @@ const sporsmal = {
       { q: 'Hvilket land er kjent for å ha funnet opp hamburger?', a: 'USA',   alt: ['USA', 'Tyskland', 'England', 'Australia'] },
     ],
   },
+
+  kroppen: {
+    '2-3': [
+      { q: 'Hva ser vi med?',                           a: 'Øynene',           alt: ['Øynene', 'Ørene', 'Nesen', 'Munnen'] },
+      { q: 'Hva hører vi med?',                         a: 'Ørene',            alt: ['Ørene', 'Øynene', 'Nesen', 'Munnen'] },
+      { q: 'Hva smaker vi med?',                        a: 'Tungen',           alt: ['Tungen', 'Nesen', 'Ørene', 'Øynene'] },
+      { q: 'Hva bruker vi til å gå?',                   a: 'Beina',            alt: ['Beina', 'Armene', 'Hodet', 'Hendene'] },
+      { q: 'Hva er øverst på kroppen?',                 a: 'Hodet',            alt: ['Hodet', 'Magen', 'Ryggen', 'Beina'] },
+      { q: 'Hva bruker vi til å klemme?',               a: 'Armene',           alt: ['Armene', 'Beina', 'Hodet', 'Nesen'] },
+      { q: 'Hva bruker vi til å smile med?',            a: 'Munnen',           alt: ['Munnen', 'Ørene', 'Nesen', 'Øynene'] },
+      { q: 'Hva sitter på enden av armene?',            a: 'Hendene',          alt: ['Hendene', 'Føttene', 'Ørene', 'Øynene'] },
+      { q: 'Hva puster vi med?',                        a: 'Nesen og munnen',  alt: ['Nesen og munnen', 'Ørene', 'Øynene', 'Hendene'] },
+      { q: 'Hvor mange øyne har du?',                   a: '2',                alt: ['2', '1', '3', '4'] },
+    ],
+    '4-5': [
+      { q: 'Hva pumper blod rundt i kroppen?',                          a: 'Hjertet',           alt: ['Hjertet', 'Hjernen', 'Leveren', 'Lungene'] },
+      { q: 'Hva puster vi med inne i kroppen?',                         a: 'Lungene',           alt: ['Lungene', 'Hjertet', 'Magen', 'Nyrene'] },
+      { q: 'Hva kaller vi de harde tingene inni kroppen?',              a: 'Bein',              alt: ['Bein', 'Muskler', 'Årer', 'Nerver'] },
+      { q: 'Hvilken kroppsdel tenker vi med?',                          a: 'Hjernen',           alt: ['Hjernen', 'Hjertet', 'Magen', 'Lungene'] },
+      { q: 'Hva tygger vi maten med?',                                  a: 'Tennene',           alt: ['Tennene', 'Tungen', 'Leppene', 'Kinnene'] },
+      { q: 'Hva er det røde som flyter inni kroppen?',                  a: 'Blod',              alt: ['Blod', 'Vann', 'Juice', 'Saft'] },
+      { q: 'Hva er hjertet laget av?',                                  a: 'Muskel',            alt: ['Muskel', 'Bein', 'Fett', 'Brusk'] },
+      { q: 'Hva beskytter hjernen?',                                    a: 'Skallen',           alt: ['Skallen', 'Ribbeina', 'Ryggraden', 'Bekkenet'] },
+      { q: 'Hva kaller vi alle beinene i kroppen samlet?',              a: 'Skjelettet',        alt: ['Skjelettet', 'Muskelsystemet', 'Nervesystemet', 'Blodåresystemet'] },
+      { q: 'Hva kaller vi de store musklene vi bruker til å løpe?',     a: 'Beinmuskler',       alt: ['Beinmuskler', 'Armmuskler', 'Rygmuskler', 'Magemuskler'] },
+    ],
+    '6-7': [
+      { q: 'Hvor mange bein er det i menneskekroppen?',                             a: '206',                  alt: ['206', '100', '300', '150'] },
+      { q: 'Hva kaller vi de to organene som filtrerer blodet?',                    a: 'Nyrene',               alt: ['Nyrene', 'Lungene', 'Leveren', 'Magen'] },
+      { q: 'Hva heter kjeden av knokler fra hodet til rumpa?',                      a: 'Ryggraden',            alt: ['Ryggraden', 'Ribbena', 'Lårbenet', 'Kragebenet'] },
+      { q: 'Hva er den lengste knokkelen i kroppen?',                               a: 'Lårbenet',             alt: ['Lårbenet', 'Skinnbenet', 'Overarmsbenet', 'Ryggraden'] },
+      { q: 'Hva kaller vi de minste levende enhetene i kroppen?',                   a: 'Celler',               alt: ['Celler', 'Atomer', 'Molekyler', 'Vev'] },
+      { q: 'Hva er blodets viktigste funksjon?',                                    a: 'Frakte oksygen',       alt: ['Frakte oksygen', 'Fordøye mat', 'Lage hormoner', 'Filtrere gift'] },
+      { q: 'Hva heter leddet mellom over- og underarm?',                            a: 'Albuen',               alt: ['Albuen', 'Kneet', 'Hoften', 'Skulderen'] },
+      { q: 'Hva er det organet som produserer galle?',                              a: 'Leveren',              alt: ['Leveren', 'Nyrene', 'Milten', 'Bukspyttkjertelen'] },
+      { q: 'Hva kaller vi systemet av nerver i kroppen?',                           a: 'Nervesystemet',        alt: ['Nervesystemet', 'Blodåresystemet', 'Fordøyelsessystemet', 'Hormonsystemet'] },
+      { q: 'Hva kaller vi det når man bryter en knokkel?',                          a: 'Brudd',                alt: ['Brudd', 'Forstuing', 'Strekk', 'Slag'] },
+    ],
+  },
+
+  transport: {
+    '2-3': [
+      { q: 'Hva flyr opp i luften?',                              a: 'Fly',          alt: ['Fly', 'Bil', 'Båt', 'Sykkel'] },
+      { q: 'Hva kjører på 4 hjul på veien?',                      a: 'Bil',          alt: ['Bil', 'Sykkel', 'Båt', 'Fly'] },
+      { q: 'Hva svømmer på vannet?',                              a: 'Båt',          alt: ['Båt', 'Fly', 'Bil', 'Tog'] },
+      { q: 'Hva har 2 hjul og trår vi?',                          a: 'Sykkel',       alt: ['Sykkel', 'Bil', 'Buss', 'Lastebil'] },
+      { q: 'Hva kjører på skinner?',                              a: 'Tog',          alt: ['Tog', 'Bil', 'Sykkel', 'Båt'] },
+      { q: 'Hva skyter vi opp i verdensrommet?',                  a: 'Rakett',       alt: ['Rakett', 'Fly', 'Helikopter', 'Ballong'] },
+      { q: 'Hva har propell og flyr, men er ikke et fly?',        a: 'Helikopter',   alt: ['Helikopter', 'Drone', 'Glidefly', 'Luftballong'] },
+      { q: 'Hva kaller vi stedet der fly lander?',                a: 'Flyplassen',   alt: ['Flyplassen', 'Havnen', 'Togstasjonen', 'Busstoppen'] },
+      { q: 'Hva kaller vi den store bilen med mange passasjerer?', a: 'Buss',        alt: ['Buss', 'Lastebil', 'Traktor', 'Taxi'] },
+      { q: 'Hvilken bil bruker vi når noen er syke og trenger hjelp?', a: 'Ambulanse', alt: ['Ambulanse', 'Brannbil', 'Politibil', 'Taxi'] },
+    ],
+    '4-5': [
+      { q: 'Hva er et fartøy uten motor som bruker vinden?',                   a: 'Seilbåt',                  alt: ['Seilbåt', 'Motorbåt', 'Ferge', 'Kano'] },
+      { q: 'Hva er det første du gjør i bilen?',                               a: 'Ta på sikkerhetsbelte',    alt: ['Ta på sikkerhetsbelte', 'Starte bilen', 'Åpne vinduet', 'Slå på musikken'] },
+      { q: 'Hva betyr rødt lys i trafikken?',                                  a: 'Stopp',                    alt: ['Stopp', 'Kjør', 'Vent litt', 'Sakte ned'] },
+      { q: 'Hva kaller vi stedet der båter stopper?',                          a: 'Havnen',                   alt: ['Havnen', 'Flyplassen', 'Togstasjonen', 'Busstoppen'] },
+      { q: 'Hva er en bil som bruker kun elektrisitet?',                       a: 'Elbil',                    alt: ['Elbil', 'Hybridbil', 'Bensinbil', 'Dieselbil'] },
+      { q: 'Hva kaller vi den lange bilen som frakter varer?',                 a: 'Lastebil',                 alt: ['Lastebil', 'Buss', 'Traktor', 'Kranbil'] },
+      { q: 'Hva fyller man på bilen for at den skal gå?',                      a: 'Bensin eller strøm',       alt: ['Bensin eller strøm', 'Vann', 'Juice', 'Melk'] },
+      { q: 'Hva heter fartøyet som kan dykke under vann?',                     a: 'Ubåt',                     alt: ['Ubåt', 'Ferge', 'Fiskebåt', 'Seilbåt'] },
+      { q: 'Hva kaller vi stedet der tog stopper?',                            a: 'Togstasjon',               alt: ['Togstasjon', 'Flyplass', 'Havn', 'Busstopp'] },
+      { q: 'Hva bruker brannmenn for å komme fort frem?',                      a: 'Brannbil',                 alt: ['Brannbil', 'Ambulanse', 'Politibil', 'Taxi'] },
+    ],
+    '6-7': [
+      { q: 'Hva kaller vi tog som svever over skinnene med magneter?',                  a: 'Magnetbane',                                    alt: ['Magnetbane', 'Høyhastighetstog', 'Monorail', 'Trikk'] },
+      { q: 'Hva er en hybridbil?',                                                      a: 'En bil med både bensin- og elektrisk motor',    alt: ['En bil med både bensin- og elektrisk motor', 'En bil kun på bensin', 'En bil kun på strøm', 'En bil på diesel'] },
+      { q: 'Hva kaller vi stedet der skip bygges og repareres?',                        a: 'Verftet',                                       alt: ['Verftet', 'Havnen', 'Kaien', 'Bryggen'] },
+      { q: 'Hva heter det japanske høyhastighetstoget?',                                a: 'Shinkansen',                                    alt: ['Shinkansen', 'Metro', 'Trikk', 'Monorail'] },
+      { q: 'Hva er et glidefly?',                                                       a: 'Et fly uten motor som glir i luften',            alt: ['Et fly uten motor som glir i luften', 'Et fly med én motor', 'Et militærfly', 'Et helikopter uten propell'] },
+      { q: 'Hva er forskjellen på en ferge og en vanlig båt?',                          a: 'Fergen frakter biler og passasjerer',            alt: ['Fergen frakter biler og passasjerer', 'Fergen er raskere', 'Fergen er mindre', 'Fergen bruker seil'] },
+      { q: 'Hva kaller vi et kjøretøy som kan kjøre på land og i vann?',               a: 'Amfibiekjøretøy',                               alt: ['Amfibiekjøretøy', 'Ubåt', 'Ferge', 'Hydrofoil'] },
+      { q: 'Hva er den internasjonale koden for flyplasser (f.eks. OSL for Oslo)?',     a: 'IATA-kode',                                     alt: ['IATA-kode', 'GPS-kode', 'NATO-kode', 'Rutenummer'] },
+      { q: 'Hva er en zeppelin?',                                                       a: 'Et stort luftskip fylt med gass',               alt: ['Et stort luftskip fylt med gass', 'Et fly med to propeller', 'Et militærfly', 'Et supersonisk fly'] },
+      { q: 'Hva kaller vi motoren som bruker diesel?',                                  a: 'Dieselmotor',                                   alt: ['Dieselmotor', 'Bensinmotor', 'Elmotor', 'Hybridmotor'] },
+    ],
+  },
+
+  sport: {
+    '2-3': [
+      { q: 'Hvilken sport spiller man med ball og scorer mål?',       a: 'Fotball',           alt: ['Fotball', 'Basketball', 'Tennis', 'Ishockey'] },
+      { q: 'I hvilken sport svømmer man?',                            a: 'Svømming',          alt: ['Svømming', 'Fotball', 'Tennis', 'Sykling'] },
+      { q: 'I hvilken sport løper man fort på en bane?',              a: 'Friidrett',         alt: ['Friidrett', 'Fotball', 'Svømming', 'Sykling'] },
+      { q: 'Hva bruker man i tennis?',                                a: 'Racket og ball',    alt: ['Racket og ball', 'Stav og ball', 'Kølle og puck', 'Bat og ball'] },
+      { q: 'I hvilken sport bruker man ski i skog og mark?',          a: 'Langrenn',          alt: ['Langrenn', 'Svømming', 'Fotball', 'Basketball'] },
+      { q: 'Hva heter stedet der man spiller fotball?',               a: 'Fotballbane',       alt: ['Fotballbane', 'Svømmehall', 'Tennisbane', 'Idrettshall'] },
+      { q: 'I hvilken sport rir man på hest?',                        a: 'Ridning',           alt: ['Ridning', 'Sykling', 'Svømming', 'Løping'] },
+      { q: 'Hva bruker en syklist på hodet for å beskytte seg?',      a: 'Hjelm',             alt: ['Hjelm', 'Lue', 'Caps', 'Pannebånd'] },
+      { q: 'Hva kaller vi det å skyte ball i mål i fotball?',         a: 'Å score',           alt: ['Å score', 'Å drible', 'Å heade', 'Å takle'] },
+      { q: 'Hva heter stedet der man svømmer innendørs?',             a: 'Svømmehall',        alt: ['Svømmehall', 'Idrettshall', 'Fotballbane', 'Tennisbane'] },
+    ],
+    '4-5': [
+      { q: 'Hvor mange spillere er det på et fotballag?',                              a: '11',                               alt: ['11', '10', '12', '9'] },
+      { q: 'I hvilken sport bruker man en puck?',                                      a: 'Ishockey',                         alt: ['Ishockey', 'Fotball', 'Tennis', 'Basketball'] },
+      { q: 'Hva kaller vi løpskonkurransen der man løper 42 km?',                      a: 'Maraton',                          alt: ['Maraton', 'Sprint', 'Stafett', 'Halvmaraton'] },
+      { q: 'Hva kaller vi det når en spiller scorer tre ganger i én kamp?',            a: 'Hat-trick',                        alt: ['Hat-trick', 'Dobbel', 'Perfekt', 'Trippel'] },
+      { q: 'Hva heter den største fotballturnering i verden?',                         a: 'VM i fotball',                     alt: ['VM i fotball', 'EM i fotball', 'Champions League', 'Europa League'] },
+      { q: 'I hvilken sport bruker man pil og bue?',                                   a: 'Bueskytting',                      alt: ['Bueskytting', 'Judo', 'Fekting', 'Bryting'] },
+      { q: 'Hva kaller vi det å løpe, sykle og svømme i én konkurranse?',              a: 'Triatlon',                         alt: ['Triatlon', 'Dekatlon', 'Pentathlon', 'Maraton'] },
+      { q: 'Hva heter toppserien i norsk fotball?',                                    a: 'Eliteserien',                      alt: ['Eliteserien', 'Tippeligaen', 'Premier League', 'Allsvenskan'] },
+      { q: 'Hva er funksjonen til dommeren i fotball?',                                a: 'Sørge for at reglene overholdes',  alt: ['Sørge for at reglene overholdes', 'Score mål', 'Trene laget', 'Selge billetter'] },
+      { q: 'Hva er offside i fotball?',                                                a: 'Å være foran siste forsvarer',     alt: ['Å være foran siste forsvarer', 'Å sparke hardt', 'Å løpe fort', 'Å heade ballen'] },
+    ],
+    '6-7': [
+      { q: 'Hva heter det største idrettsarrangementet i verden?',                     a: 'Olympiske leker',              alt: ['Olympiske leker', 'VM i fotball', 'World Cup', 'Champions League'] },
+      { q: 'Hvem er det norske ski-ikonet med flest OL-gull?',                        a: 'Marit Bjørgen',                alt: ['Marit Bjørgen', 'Therese Johaug', 'Ingrid Østberg', 'Bente Skari'] },
+      { q: 'I hvilken idrett bruker man sabre, florett og kårde?',                    a: 'Fekting',                      alt: ['Fekting', 'Bryting', 'Judo', 'Boksing'] },
+      { q: 'Hva kaller vi teknikken i svømming med begge armene symmetrisk over hodet?', a: 'Butterfly',                 alt: ['Butterfly', 'Crawl', 'Bryst', 'Rygg'] },
+      { q: 'I hvilken sport er det lov å løpe med ballen i hendene?',                 a: 'Rugby',                        alt: ['Rugby', 'Fotball', 'Ishockey', 'Svømming'] },
+      { q: 'Hva heter den store tennisturnering på gressbane i England?',              a: 'Wimbledon',                    alt: ['Wimbledon', 'Roland Garros', 'US Open', 'Australian Open'] },
+      { q: 'Hva er en dekatlon?',                                                     a: 'En konkurranse med 10 øvelser', alt: ['En konkurranse med 10 øvelser', 'En løpskonkurranse', 'En svømmekonkurranse', 'En sykkeletappe'] },
+      { q: 'Hva kaller vi det i basketball å ta mer enn to steg uten å drible?',      a: 'Travelling',                   alt: ['Travelling', 'Foul', 'Offside', 'Blocking'] },
+      { q: 'Hva heter det når man slår ballen langt ut av banen i baseball?',         a: 'Homerun',                      alt: ['Homerun', 'Strike', 'Foul', 'Scoring'] },
+      { q: 'Hva er den offisielle spilletiden i en fotballkamp?',                     a: '90 minutter',                  alt: ['90 minutter', '80 minutter', '100 minutter', '120 minutter'] },
+    ],
+  },
+
+  eventyr: {
+    '2-3': [
+      { q: 'Hvem hadde en rød kappe og besøkte bestemoren?',          a: 'Rødhette',              alt: ['Rødhette', 'Snøhvit', 'Askepott', 'Gullhår'] },
+      { q: 'Hvem bodde i hus av halm, pinner og stein?',              a: 'De tre små griser',     alt: ['De tre små griser', 'Rødhette', 'Gullhår', 'Tommelise'] },
+      { q: 'Hvem spiste fra bjørnenes grøtskål?',                     a: 'Gullhår',               alt: ['Gullhår', 'Rødhette', 'Askepott', 'Snøhvit'] },
+      { q: 'Hvem hadde veldig langt hår i et tårn?',                  a: 'Rapunsel',              alt: ['Rapunsel', 'Rødhette', 'Askepott', 'Snøhvit'] },
+      { q: 'Hvem spiste det forgiftede eplet?',                       a: 'Snøhvit',               alt: ['Snøhvit', 'Rødhette', 'Gullhår', 'Askepott'] },
+      { q: 'Hvem mistet skoen da hun løp fra ballet?',                a: 'Askepott',              alt: ['Askepott', 'Rødhette', 'Snøhvit', 'Gullhår'] },
+      { q: 'Hvem ble reddet av de sju dvergene?',                     a: 'Snøhvit',               alt: ['Snøhvit', 'Rødhette', 'Askepott', 'Rapunsel'] },
+      { q: 'Hvem hadde nesen som vokste når han løy?',                a: 'Pinocchio',             alt: ['Pinocchio', 'Tom Tommeliten', 'Askeladden', 'Rødhette'] },
+      { q: 'Hvem bodde under broen og skapte problemer for geitene?', a: 'Trollet',               alt: ['Trollet', 'Heksen', 'Kjempen', 'Dragen'] },
+      { q: 'Hvem måtte gjette navnet på den lille mannen for å slippe fri?', a: 'Prinsessen i Rumpelstiltskin', alt: ['Prinsessen i Rumpelstiltskin', 'Askepott', 'Snøhvit', 'Rødhette'] },
+    ],
+    '4-5': [
+      { q: 'Hvem spant gull av strå?',                                            a: 'Rumpelstiltskin',                       alt: ['Rumpelstiltskin', 'Trollmannen', 'Prinsessen', 'Heksen'] },
+      { q: 'Hva skjedde med Pinocchio når han løy?',                              a: 'Nesen vokste',                          alt: ['Nesen vokste', 'Ørene ble store', 'Føttene ble lange', 'Hendene ble røde'] },
+      { q: 'Hvem ble forvandlet til et beist?',                                   a: 'Prinsen i «Skjønnheten og udyret»',     alt: ['Prinsen i «Skjønnheten og udyret»', 'Askepott', 'Snøhvit', 'Rapunsel'] },
+      { q: 'Hva heter brødrene i eventyret om tre geiter og trollet?',            a: 'Bukke-Bruse',                           alt: ['Bukke-Bruse', 'De tre griser', 'De sju dverger', 'De tre bjørner'] },
+      { q: 'Hvem ble født liten nok til å sitte i en blomst?',                    a: 'Tommelise',                             alt: ['Tommelise', 'Snøhvit', 'Rødhette', 'Askepott'] },
+      { q: 'Hva var særegent med keiserens nye klær?',                            a: 'De fantes ikke – han var naken',        alt: ['De fantes ikke – han var naken', 'De var usynlige for de rike', 'De var laget av gull', 'De kunne fly'] },
+      { q: 'Hvem forvandlet seg fra en styggling til en vakker svane?',           a: 'Den stygge andungen',                   alt: ['Den stygge andungen', 'Rødhette', 'Pinocchio', 'Askepott'] },
+      { q: 'Hvem klatret opp bønnestengelen og møtte kjempen?',                   a: 'Jakob',                                 alt: ['Jakob', 'Askeladden', 'Tom Tommeliten', 'Rødhette'] },
+      { q: 'Hvem samlet de norske folkeeventyrene?',                              a: 'Asbjørnsen og Moe',                     alt: ['Asbjørnsen og Moe', 'Henrik Ibsen', 'Bjørnson', 'Knut Hamsun'] },
+      { q: 'Hvem var den norske eventyrgutta som vant med list og klokskap?',     a: 'Askeladden',                            alt: ['Askeladden', 'Rødhette', 'Bukke-Bruse', 'Gudbrand'] },
+    ],
+    '6-7': [
+      { q: 'Hvem skrev eventyrene om Snøhvit, Askepott og Rødhette?',         a: 'Brødrene Grimm',                                   alt: ['Brødrene Grimm', 'Hans Christian Andersen', 'Charles Perrault', 'Asbjørnsen og Moe'] },
+      { q: 'Hvem skrev Den lille havfrue og Tommelise?',                       a: 'Hans Christian Andersen',                          alt: ['Hans Christian Andersen', 'Brødrene Grimm', 'Charles Perrault', 'Oscar Wilde'] },
+      { q: 'Hva er moralen i eventyret om haren og skilpadden?',               a: 'Sakte og jevnt vinner løpet',                      alt: ['Sakte og jevnt vinner løpet', 'Den sterkeste vinner', 'Den smarteste vinner', 'Aldri gi opp'] },
+      { q: 'Hva heter eventyret om gutten som aldri ville bli voksen?',        a: 'Peter Pan',                                        alt: ['Peter Pan', 'Pinocchio', 'Tom Sawyer', 'Huckleberry Finn'] },
+      { q: 'Hvor kommer eventyret om Aladdin opprinnelig fra?',                a: 'Arabia og Persia',                                 alt: ['Arabia og Persia', 'India', 'Kina', 'Egypt'] },
+      { q: 'Hva er en fabel?',                                                 a: 'Et kort eventyr med en lærdom, ofte med dyr',      alt: ['Et kort eventyr med en lærdom, ofte med dyr', 'Et langt eventyr om prinser', 'Et eventyr med troll', 'Et dikt om naturen'] },
+      { q: 'Hvem forfattet Aesops fabler?',                                    a: 'Aesop, en gresk forteller',                        alt: ['Aesop, en gresk forteller', 'Homer', 'Platon', 'Sokrates'] },
+      { q: 'Hva er typisk for norske trolleventyr?',                           a: 'Trollet møter sin overmann ved list og klokskap',  alt: ['Trollet møter sin overmann ved list og klokskap', 'Trollet vinner alltid', 'Prinsessen redder seg selv', 'Trollet er egentlig snilt'] },
+      { q: 'Hva kaller vi et eventyr som starter med «Det var en gang...»?',   a: 'Folkeeventyr',                                     alt: ['Folkeeventyr', 'Fabel', 'Saga', 'Myte'] },
+      { q: 'Hva er den onde dronningens plan i Snøhvit?',                      a: 'Å bli den vakreste i landet',                      alt: ['Å bli den vakreste i landet', 'Å stjele gullet', 'Å erobre kongeriket', 'Å finne en prins'] },
+    ],
+  },
+
+  yrker: {
+    '2-3': [
+      { q: 'Hvem hjelper syke folk?',               a: 'Legen',             alt: ['Legen', 'Brannmannen', 'Kokken', 'Læreren'] },
+      { q: 'Hvem slukker branner?',                 a: 'Brannmannen',       alt: ['Brannmannen', 'Legen', 'Piloten', 'Politiet'] },
+      { q: 'Hvem lærer barn på skolen?',            a: 'Læreren',           alt: ['Læreren', 'Legen', 'Kokken', 'Tannlegen'] },
+      { q: 'Hvem flyr fly?',                        a: 'Piloten',           alt: ['Piloten', 'Legen', 'Kokken', 'Læreren'] },
+      { q: 'Hvem bringer post til husene?',         a: 'Postbudet',         alt: ['Postbudet', 'Legen', 'Læreren', 'Kokken'] },
+      { q: 'Hvem lager mat på restaurant?',         a: 'Kokken',            alt: ['Kokken', 'Legen', 'Læreren', 'Piloten'] },
+      { q: 'Hvem passer på tennene våre?',          a: 'Tannlegen',         alt: ['Tannlegen', 'Legen', 'Kokken', 'Læreren'] },
+      { q: 'Hvem passer på lov og orden?',          a: 'Politiet',          alt: ['Politiet', 'Legen', 'Kokken', 'Læreren'] },
+      { q: 'Hvem tar vare på syke dyr?',            a: 'Veterinæren',       alt: ['Veterinæren', 'Legen', 'Kokken', 'Læreren'] },
+      { q: 'Hvem bygger hus?',                      a: 'Snekker og byggmester', alt: ['Snekker og byggmester', 'Legen', 'Piloten', 'Kokken'] },
+    ],
+    '4-5': [
+      { q: 'Hva kaller vi en person som tegner hus og bygninger?',          a: 'Arkitekt',                          alt: ['Arkitekt', 'Ingeniør', 'Snekker', 'Maler'] },
+      { q: 'Hva gjør en journalist?',                                       a: 'Skriver og formidler nyheter',      alt: ['Skriver og formidler nyheter', 'Lager mat', 'Bygger hus', 'Flyr fly'] },
+      { q: 'Hva kaller vi en person som spiller teater?',                   a: 'Skuespiller',                       alt: ['Skuespiller', 'Musiker', 'Danser', 'Sanger'] },
+      { q: 'Hvem reparerer rør og vann i hus?',                             a: 'Rørleggeren',                       alt: ['Rørleggeren', 'Elektrikeren', 'Snekker', 'Maleren'] },
+      { q: 'Hva gjør en bibliotekar?',                                      a: 'Passer på bøker og hjelper folk',   alt: ['Passer på bøker og hjelper folk', 'Lager mat', 'Underviser i sport', 'Bygger hus'] },
+      { q: 'Hvem tar bilder profesjonelt?',                                 a: 'Fotografen',                        alt: ['Fotografen', 'Maleren', 'Designeren', 'Journalisten'] },
+      { q: 'Hva gjør en bonde?',                                            a: 'Dyrker mat og passer på dyr',       alt: ['Dyrker mat og passer på dyr', 'Lager hus', 'Flyr fly', 'Skriver bøker'] },
+      { q: 'Hvem reparerer strøm i hus?',                                   a: 'Elektrikeren',                      alt: ['Elektrikeren', 'Rørleggeren', 'Snekker', 'Maleren'] },
+      { q: 'Hva kaller vi en person som forsker på nye ting?',              a: 'Forsker',                           alt: ['Forsker', 'Lærer', 'Lege', 'Ingeniør'] },
+      { q: 'Hvem designer klær?',                                           a: 'Motedesigner',                      alt: ['Motedesigner', 'Arkitekt', 'Kokken', 'Journalist'] },
+    ],
+    '6-7': [
+      { q: 'Hva kaller vi en person som forsvarer folk i retten?',                         a: 'Advokat',                                       alt: ['Advokat', 'Dommer', 'Anklager', 'Statsadvokat'] },
+      { q: 'Hva gjør en kirurg?',                                                          a: 'Opererer pasienter',                            alt: ['Opererer pasienter', 'Skriver ut medisiner', 'Stiller diagnoser', 'Pleier syke'] },
+      { q: 'Hva kaller vi en person som programmerer datamaskiner?',                       a: 'Utvikler',                                      alt: ['Utvikler', 'Designer', 'Analytiker', 'Konsulent'] },
+      { q: 'Hva er en diplomat?',                                                          a: 'En person som representerer landet sitt i utlandet', alt: ['En person som representerer landet sitt i utlandet', 'En som reiser mye', 'En politiker', 'En journalist'] },
+      { q: 'Hva kaller vi en som studerer stjernene og verdensrommet?',                    a: 'Astronom',                                      alt: ['Astronom', 'Astrologer', 'Fysiker', 'Geolog'] },
+      { q: 'Hva gjør en arkitekt?',                                                        a: 'Designer og planlegger bygninger',              alt: ['Designer og planlegger bygninger', 'Bygger veier', 'Reparerer fly', 'Lager biler'] },
+      { q: 'Hva kaller vi en person som underviser på universitetet?',                     a: 'Professor',                                     alt: ['Professor', 'Lektor', 'Rektor', 'Dekan'] },
+      { q: 'Hva er en økonom?',                                                            a: 'En ekspert på penger og økonomi',               alt: ['En ekspert på penger og økonomi', 'En som studerer dyr', 'En forsker på planter', 'En historiker'] },
+      { q: 'Hva gjør en meteorolog?',                                                      a: 'Varsler været',                                 alt: ['Varsler været', 'Studerer meteorer', 'Forsker på havet', 'Kartlegger fjell'] },
+      { q: 'Hva kaller vi en person som lager og fikser tekniske systemer?',               a: 'Ingeniør',                                      alt: ['Ingeniør', 'Tekniker', 'Mekaniker', 'Montør'] },
+    ],
+  },
+
+  arkeologi: {
+    '2-3': [
+      { q: 'Hva er arkeologer på jakt etter?',                              a: 'Gamle ting fra fortiden',                               alt: ['Gamle ting fra fortiden', 'Gull og skatter', 'Steiner', 'Dyr'] },
+      { q: 'Hva er en dinosaur?',                                           a: 'Et stort dyr som levde for veldig lenge siden',         alt: ['Et stort dyr som levde for veldig lenge siden', 'Et dyr som lever i dag', 'Et dyr i havet', 'En stor fugl'] },
+      { q: 'Hva kaller vi de store trekantige byggene i Egypt?',            a: 'Pyramider',                                             alt: ['Pyramider', 'Templer', 'Slott', 'Kirker'] },
+      { q: 'Hvem bygde pyramidene?',                                        a: 'Egypterne',                                             alt: ['Egypterne', 'Romerne', 'Vikingene', 'Ridderne'] },
+      { q: 'Hva bruker arkeologer for å grave forsiktig?',                  a: 'Pensel og skje',                                        alt: ['Pensel og skje', 'Spade og hammer', 'Sag og bor', 'Kran og gravemaskin'] },
+      { q: 'Hva er et fossil?',                                             a: 'Restene av et gammelt dyr som er blitt til stein',      alt: ['Restene av et gammelt dyr som er blitt til stein', 'En gammel mynt', 'En gammel vase', 'Et gammelt maleri'] },
+      { q: 'Hvem seilte i vikingskip?',                                     a: 'Vikingene',                                             alt: ['Vikingene', 'Romerne', 'Egypterne', 'Ridderne'] },
+      { q: 'Hva kaller vi bilder malt av steinaldermennesker i huler?',     a: 'Hulemalerier',                                          alt: ['Hulemalerier', 'Veggmalerier', 'Steintavler', 'Klippebilder'] },
+      { q: 'Hva kaller vi en person som graver frem historiske gjenstander?', a: 'Arkeolog',                                           alt: ['Arkeolog', 'Geolog', 'Biolog', 'Historiker'] },
+      { q: 'Hva heter tidsperioden da folk brukte steinverktøy?',           a: 'Steinalderen',                                          alt: ['Steinalderen', 'Bronsealderen', 'Jernalderen', 'Middelalderen'] },
+    ],
+    '4-5': [
+      { q: 'Hva kaller vi et sted der arkeologer graver?',                  a: 'Utgravningssted',               alt: ['Utgravningssted', 'Fundsted', 'Gravsted', 'Historisk plass'] },
+      { q: 'Hva heter de eldste skrifttegnene fra Egypt?',                  a: 'Hieroglyfer',                   alt: ['Hieroglyfer', 'Runeskrift', 'Latinske bokstaver', 'Gresk alfabet'] },
+      { q: 'Hva er de store stående steinene i Storbritannia kjent som?',   a: 'Stonehenge',                    alt: ['Stonehenge', 'Megalitter', 'Druidenes tempel', 'Steinsirkelen'] },
+      { q: 'Hva er en mumie?',                                              a: 'Et balsamert lik fra Egypt',    alt: ['Et balsamert lik fra Egypt', 'Et gammelt skjelett', 'En steinfigur', 'Et gammelt maleri'] },
+      { q: 'Hva kaller vi vikingenes lange og smale skip?',                 a: 'Langskip',                      alt: ['Langskip', 'Vikingskip', 'Drakeskip', 'Rundskip'] },
+      { q: 'Hvem var Tutankamon?',                                          a: 'En ung farao i det gamle Egypt', alt: ['En ung farao i det gamle Egypt', 'En gresk helt', 'En romersk keiser', 'En vikinghøvding'] },
+      { q: 'Hva kaller vi tegn og symboler fra vikingtiden?',               a: 'Runer',                         alt: ['Runer', 'Hieroglyfer', 'Bokstaver', 'Symboler'] },
+      { q: 'Hva er en artefakt?',                                           a: 'En gammel gjenstand laget av mennesker', alt: ['En gammel gjenstand laget av mennesker', 'En naturstein', 'Et dyreskjelett', 'En plante'] },
+      { q: 'Hva heter de underjordiske gangene fra oldtiden under Roma?',   a: 'Katakomber',                    alt: ['Katakomber', 'Kloakker', 'Tunneler', 'Huleganger'] },
+      { q: 'Hva kaller vi tidsperioden da menneskene begynte å bruke jern?', a: 'Jernalderen',                  alt: ['Jernalderen', 'Steinalderen', 'Bronsealderen', 'Middelalderen'] },
+    ],
+    '6-7': [
+      { q: 'Hvilken sivilisasjon bygde de store pyramidene i Egypt?',                              a: 'Det gamle Egypt',                                       alt: ['Det gamle Egypt', 'Romerne', 'Grekerne', 'Mesopotamia'] },
+      { q: 'Hva er karbondatering?',                                                               a: 'En metode for å beregne alderen på gamle gjenstander', alt: ['En metode for å beregne alderen på gamle gjenstander', 'En teknikk for å rense artefakter', 'En måte å fotografere funn', 'En analyse av jord'] },
+      { q: 'Hva var Rosettasteinens betydning?',                                                   a: 'Den hjalp oss å tyde hieroglyfene',                     alt: ['Den hjalp oss å tyde hieroglyfene', 'Den var den største steinen i Egypt', 'Den var hellig for faraoene', 'Den markerte Nilens bredde'] },
+      { q: 'Hva heter stedet der man fant Tutankhamons grav?',                                     a: 'Kongenes dal',                                          alt: ['Kongenes dal', 'Nil-deltaet', 'Gizaplateauet', 'Memphis'] },
+      { q: 'Hva er Mesopotamia kjent for?',                                                        a: 'En av de tidligste sivilisasjonene',                    alt: ['En av de tidligste sivilisasjonene', 'De største pyramidene', 'De første vikingene', 'Gresk mytologi'] },
+      { q: 'Hva heter de eldste menneskeskapte strukturene vi kjenner til?',                       a: 'Göbekli Tepe',                                          alt: ['Göbekli Tepe', 'Pyramidene i Egypt', 'Parthenon i Hellas', 'Colosseum i Roma'] },
+      { q: 'Hva er stratigrafi?',                                                                  a: 'Studiet av jordlag for å bestemme alder og rekkefølge', alt: ['Studiet av jordlag for å bestemme alder og rekkefølge', 'En måte å finne skatter', 'En teknikk for å rense artefakter', 'En fotograferingsmetode'] },
+      { q: 'Hva kaller vi perioden da menneskene lærte å lage redskaper av bronse?',               a: 'Bronsealderen',                                         alt: ['Bronsealderen', 'Steinalderen', 'Jernalderen', 'Middelalderen'] },
+      { q: 'Hva er Pompeii kjent for?',                                                            a: 'En romersk by begravet av vulkanutbrudd fra Vesuv',    alt: ['En romersk by begravet av vulkanutbrudd fra Vesuv', 'En gresk by ved havet', 'En egyptisk handelsstad', 'En vikingby i Norden'] },
+      { q: 'Hva heter teknikken der man lager 3D-kart av utgravningsstedet med laser?',            a: 'Lidar',                                                 alt: ['Lidar', 'GPS-scanning', 'Radar-mapping', 'Drone-fotografering'] },
+    ],
+  },
 };
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
@@ -542,7 +778,7 @@ function renderTema() {
   let html = `<h2>Velg et tema!</h2>`;
   html += `<div class="theme-grid">`;
   temaer.forEach(t => {
-    html += `<button class="theme-btn" onclick="velgTema('${t.id}')">
+    html += `<button class="theme-btn" style="background:linear-gradient(135deg,${t.grad});color:${t.tekst}" onclick="velgTema('${t.id}')">
       <span class="emoji">${t.emoji}</span>${t.navn}
     </button>`;
   });
