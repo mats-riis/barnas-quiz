@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barnas Quiz</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 36px 32px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    h1 { font-size: 2.2rem; color: #4a2d8f; text-align: center; margin-bottom: 8px; }
+    h2 { font-size: 1.5rem; color: #4a2d8f; text-align: center; margin-bottom: 24px; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 28px; font-size: 1.05rem; }
+
+    /* Age buttons */
+    .age-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .age-btn {
+      padding: 20px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      color: white;
+    }
+    .age-btn:nth-child(1) { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .age-btn:nth-child(2) { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .age-btn:nth-child(3) { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+    .age-btn:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .age-btn:active { transform: scale(0.97); }
+
+    /* Theme buttons */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .theme-btn {
+      padding: 22px 12px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .theme-btn .emoji { font-size: 2.2rem; }
+    .theme-btn:nth-child(1) { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .theme-btn:nth-child(2) { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .theme-btn:nth-child(3) { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a6650; }
+    .theme-btn:nth-child(4) { background: linear-gradient(135deg, #f7971e, #ffd200); color: #6b4800; }
+    .theme-btn:nth-child(5) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); grid-column: span 2; }
+    .theme-btn:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .theme-btn:active { transform: scale(0.97); }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: #eee;
+      border-radius: 99px;
+      height: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    /* Question */
+    .question-text {
+      font-size: 1.35rem;
+      color: #2d1b69;
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.5;
+      min-height: 70px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .option-btn {
+      padding: 18px 10px;
+      border: 3px solid #e0d7f5;
+      border-radius: 16px;
+      background: #f9f6ff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #3d2080;
+      line-height: 1.3;
+    }
+    .option-btn:hover:not(:disabled) {
+      background: #ede8ff;
+      border-color: #9d78f5;
+      transform: scale(1.03);
+    }
+    .option-btn.correct {
+      background: #d4f8e8;
+      border-color: #2ecc71;
+      color: #1a6640;
+      border-width: 4px;
+      transform: scale(1.06);
+      box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.3), 0 8px 24px rgba(46,204,113,0.35);
+      animation: pulseGreen 0.5s ease;
+      position: relative;
+    }
+    .option-btn.correct::after {
+      content: '✅ RIKTIG SVAR!';
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #1a6640;
+      letter-spacing: 0.5px;
+      margin-top: 6px;
+    }
+    @keyframes pulseGreen {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.1); }
+      100% { transform: scale(1.06); }
+    }
+    .option-btn.wrong {
+      background: #fde8e8;
+      border-color: #e74c3c;
+      color: #8b1a1a;
+      border-width: 4px;
+      position: relative;
+    }
+    .option-btn.wrong::after {
+      content: '❌ Feil';
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #c0392b;
+      margin-top: 4px;
+    }
+    .option-btn:disabled { cursor: default; }
+
+    /* Feedback */
+    .feedback {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 18px;
+      min-height: 38px;
+    }
+    .feedback.right { color: #2ecc71; }
+    .feedback.wrong { color: #e74c3c; }
+
+    /* Result screen */
+    .result-emoji { font-size: 4rem; text-align: center; margin-bottom: 12px; }
+    .result-score { font-size: 3rem; font-weight: bold; color: #4a2d8f; text-align: center; margin-bottom: 8px; }
+    .result-msg { text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 28px; }
+
+    /* Action buttons */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-top: 10px;
+      color: white;
+    }
+    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .btn-secondary { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn:active { transform: scale(0.97); }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #999;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: underline;
+    }
+    .back-link:hover { color: #666; }
+
+    /* Stars animation */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .star { display: inline-block; animation: bounce 0.6s ease infinite; }
+    .star:nth-child(2) { animation-delay: 0.1s; }
+    .star:nth-child(3) { animation-delay: 0.2s; }
+  </style>
+</head>
+<body>
+<div class="card" id="app"></div>
+
+<script>
+// ─── QUIZ DATA ───────────────────────────────────────────────────────────────
+const temaer = [
+  { id: 'dyr',    navn: 'Dyr',             emoji: '🐾' },
+  { id: 'farger', navn: 'Farger & Former', emoji: '🎨' },
+  { id: 'tall',   navn: 'Tall & Matte',    emoji: '🔢' },
+  { id: 'natur',  navn: 'Natur',           emoji: '🌿' },
+  { id: 'mat',    navn: 'Mat',             emoji: '🍎' },
+];
+
+const aldersgrupper = [
+  { id: '2-3', label: '👶  2 – 3 år' },
+  { id: '4-5', label: '🧒  4 – 5 år' },
+  { id: '6-7', label: '🧑  6 – 7 år' },
+];
+
+const sporsmal = {
+  dyr: {
+    '2-3': [
+      { q: 'Hvilken lyd lager en hund?',          a: 'Voff',      alt: ['Voff', 'Mjau', 'Mø', 'Kvakk'] },
+      { q: 'Hvilket dyr har en snabel?',           a: 'Elefant',   alt: ['Elefant', 'Hund', 'Katt', 'Hest'] },
+      { q: 'Hvilken farge har en isbjørn?',        a: 'Hvit',      alt: ['Hvit', 'Svart', 'Brun', 'Grå'] },
+      { q: 'Hvilken lyd lager en ku?',             a: 'Mø',        alt: ['Mø', 'Voff', 'Mjau', 'Pi-pi'] },
+      { q: 'Hvilket dyr kan hoppe veldig høyt?',   a: 'Kenguru',   alt: ['Kenguru', 'Fisk', 'Orm', 'Snegle'] },
+      { q: 'Hva kaller vi et babydyr hos hund?',   a: 'Valp',      alt: ['Valp', 'Unge', 'Kattunge', 'Lam'] },
+      { q: 'Hvilket dyr sier «Kvakk»?',            a: 'Frosk',     alt: ['Frosk', 'Fugl', 'Ku', 'Hund'] },
+      { q: 'Hvilket dyr har skjell og bor i vann?', a: 'Fisk',     alt: ['Fisk', 'Katt', 'Hund', 'Kanin'] },
+      { q: 'Hva har en fugl to av som den flyr med?', a: 'Vinger', alt: ['Vinger', 'Bein', 'Ører', 'Tenner'] },
+      { q: 'Hvilken farge er en flamingo?',        a: 'Rosa',      alt: ['Rosa', 'Blå', 'Grønn', 'Oransje'] },
+    ],
+    '4-5': [
+      { q: 'Hvor mange bein har en edderkopp?',   a: '8',         alt: ['8', '6', '4', '10'] },
+      { q: 'Hva gir kyr oss som vi drikker?',     a: 'Melk',      alt: ['Melk', 'Juice', 'Vann', 'Te'] },
+      { q: 'Hvilket dyr er det største på land?', a: 'Elefant',   alt: ['Elefant', 'Neshorn', 'Flodhest', 'Sjiraff'] },
+      { q: 'Hva kaller vi dyrets unger hos katt?', a: 'Kattunger', alt: ['Kattunger', 'Valper', 'Lam', 'Kyllinger'] },
+      { q: 'Hvilket dyr er kjent for sin pukkel?', a: 'Kamel',    alt: ['Kamel', 'Elefant', 'Bjørn', 'Hest'] },
+      { q: 'Hva spiser en kanin helst?',          a: 'Gulrot',    alt: ['Gulrot', 'Kjøtt', 'Fisk', 'Brød'] },
+      { q: 'Hvilket dyr kan endre farge for å gjemme seg?', a: 'Kameleon', alt: ['Kameleon', 'Hund', 'Katt', 'Hest'] },
+      { q: 'Hvor mange bein har en insekt?',      a: '6',         alt: ['6', '8', '4', '10'] },
+      { q: 'Hva lager bier som er søtt?',         a: 'Honning',   alt: ['Honning', 'Sukker', 'Syltetøy', 'Sjokolade'] },
+      { q: 'Hvilket dyr sover hele vinteren?',    a: 'Bjørn',     alt: ['Bjørn', 'Hund', 'Hest', 'Katt'] },
+    ],
+    '6-7': [
+      { q: 'Hvilket dyr er det raskeste på land?',   a: 'Gepard',    alt: ['Gepard', 'Løve', 'Hest', 'Gaupe'] },
+      { q: 'Hva kaller vi det største dyret i havet?', a: 'Blåhval', alt: ['Blåhval', 'Hvithai', 'Blekksprut', 'Delfin'] },
+      { q: 'Hva spiser en pingvin?',              a: 'Fisk',      alt: ['Fisk', 'Planter', 'Insekter', 'Frø'] },
+      { q: 'Hvilket kontinent lever løver naturlig på?', a: 'Afrika', alt: ['Afrika', 'Asia', 'Europa', 'Amerika'] },
+      { q: 'Hva kaller vi dyr som spiser bare planter?', a: 'Planteetere', alt: ['Planteetere', 'Kjøttspiser', 'Altetere', 'Fiskeeter'] },
+      { q: 'Hva kaller vi babyen til en sau?',    a: 'Lam',       alt: ['Lam', 'Kalv', 'Gris', 'Kylling'] },
+      { q: 'Hvilket dyr er kjent for sin svart-hvite farge og bor i polare strøk?', a: 'Pingvin', alt: ['Pingvin', 'Sebra', 'Panda', 'Dalmatiner'] },
+      { q: 'Hva kaller vi et dyr som lever både på land og i vann?', a: 'Amfibie', alt: ['Amfibie', 'Reptil', 'Pattedyr', 'Fugl'] },
+      { q: 'Hvilken fugl kan ikke fly, men løper veldig fort?', a: 'Struts', alt: ['Struts', 'Ørn', 'Pingvin', 'Papegøye'] },
+      { q: 'Hva kaller vi det når edderkopper lager et nett?', a: 'Spindelvev', alt: ['Spindelvev', 'Kokong', 'Reir', 'Hule'] },
+    ],
+  },
+
+  farger: {
+    '2-3': [
+      { q: 'Hvilken farge er himmelen på en fin dag?', a: 'Blå',   alt: ['Blå', 'Rød', 'Grønn', 'Gul'] },
+      { q: 'Hvilken farge er gresset?',             a: 'Grønn',   alt: ['Grønn', 'Blå', 'Rød', 'Lilla'] },
+      { q: 'Hvilken farge er solen?',               a: 'Gul',     alt: ['Gul', 'Blå', 'Grønn', 'Rosa'] },
+      { q: 'Hvilken farge er en tomat?',            a: 'Rød',     alt: ['Rød', 'Blå', 'Gul', 'Grønn'] },
+      { q: 'Hvilken form er et hjul?',              a: 'Rund',    alt: ['Rund', 'Firkantet', 'Trekantet', 'Stjerne'] },
+      { q: 'Hvilken farge er en elefant?',          a: 'Grå',     alt: ['Grå', 'Rosa', 'Brun', 'Hvit'] },
+      { q: 'Hvilken farge er snø?',                 a: 'Hvit',    alt: ['Hvit', 'Blå', 'Gul', 'Rød'] },
+      { q: 'Hvilken farge er natt-himmelen?',       a: 'Mørkeblå/Svart', alt: ['Mørkeblå/Svart', 'Rød', 'Grønn', 'Gul'] },
+      { q: 'Hvor mange sider har en trekant?',      a: '3',       alt: ['3', '4', '5', '2'] },
+      { q: 'Hvilken farge er en banan?',            a: 'Gul',     alt: ['Gul', 'Rød', 'Blå', 'Grønn'] },
+    ],
+    '4-5': [
+      { q: 'Hva får du når du blander rødt og blått?',  a: 'Lilla',  alt: ['Lilla', 'Grønn', 'Oransje', 'Rosa'] },
+      { q: 'Hvor mange sider har en firkant?',          a: '4',      alt: ['4', '3', '5', '6'] },
+      { q: 'Hva får du når du blander rødt og gult?',   a: 'Oransje', alt: ['Oransje', 'Lilla', 'Grønn', 'Brun'] },
+      { q: 'Hvilken form har en pizzabit?',             a: 'Trekant', alt: ['Trekant', 'Sirkel', 'Firkant', 'Rektangel'] },
+      { q: 'Hva heter den runden formen?',              a: 'Sirkel',  alt: ['Sirkel', 'Kvadrat', 'Trekant', 'Rektangel'] },
+      { q: 'Hvilken farge er laget av alle regnbuens farger?', a: 'Hvit', alt: ['Hvit', 'Svart', 'Grå', 'Brun'] },
+      { q: 'Hva får du når du blander gult og blått?',  a: 'Grønn',  alt: ['Grønn', 'Lilla', 'Oransje', 'Rød'] },
+      { q: 'Hvilken form har et egg?',                  a: 'Oval',   alt: ['Oval', 'Rund', 'Firkantet', 'Trekantet'] },
+      { q: 'Hva er den mørkeste fargen?',               a: 'Svart',  alt: ['Svart', 'Mørkeblå', 'Brun', 'Lilla'] },
+      { q: 'Hva heter figuren med 5 hjørner?',          a: 'Pentagon', alt: ['Pentagon', 'Kvadrat', 'Heksagon', 'Oktagon'] },
+    ],
+    '6-7': [
+      { q: 'Hva heter figuren med 6 sider?',        a: 'Heksagon',  alt: ['Heksagon', 'Pentagon', 'Oktagon', 'Septagon'] },
+      { q: 'Hvilke tre farger kalles primærfarger?', a: 'Rød, gul og blå', alt: ['Rød, gul og blå', 'Rød, grønn og blå', 'Gul, grønn og lilla', 'Oransje, blå og rød'] },
+      { q: 'Hva heter figuren med 8 sider?',        a: 'Oktagon',   alt: ['Oktagon', 'Heksagon', 'Pentagon', 'Septagon'] },
+      { q: 'Hva er komplementærfargen til rødt?',   a: 'Grønt',     alt: ['Grønt', 'Blått', 'Gult', 'Lilla'] },
+      { q: 'Hva kaller vi en firkant der alle sider er like lange?', a: 'Kvadrat', alt: ['Kvadrat', 'Rektangel', 'Rombus', 'Parallellogram'] },
+      { q: 'Hvilken farge er midten av regnbuen?',  a: 'Grønn',     alt: ['Grønn', 'Gul', 'Blå', 'Oransje'] },
+      { q: 'Hva kaller vi trekanter der alle sider er like?', a: 'Likesidet trekant', alt: ['Likesidet trekant', 'Rettvinklet trekant', 'Likebeint trekant', 'Spiss trekant'] },
+      { q: 'Hva er komplementærfargen til gult?',   a: 'Lilla',     alt: ['Lilla', 'Grønt', 'Blått', 'Oransje'] },
+      { q: 'Hva kaller vi 3D-versjonen av en sirkel?', a: 'Kule',   alt: ['Kule', 'Sylinder', 'Kjegle', 'Kube'] },
+      { q: 'Hva heter alle fargene i regnbuen til sammen?', a: 'Spekter', alt: ['Spekter', 'Palett', 'Gradient', 'Prisme'] },
+    ],
+  },
+
+  tall: {
+    '2-3': [
+      { q: 'Hvor mange fingre er det på én hånd?', a: '5',  alt: ['5', '4', '3', '6'] },
+      { q: 'Hva kommer etter tallet 2?',           a: '3',  alt: ['3', '4', '1', '5'] },
+      { q: 'Hvor mange bein har en hund?',         a: '4',  alt: ['4', '2', '6', '8'] },
+      { q: 'Hva er 1 + 1?',                        a: '2',  alt: ['2', '3', '1', '4'] },
+      { q: 'Hvor mange øyne har du?',              a: '2',  alt: ['2', '1', '3', '4'] },
+      { q: 'Hva kommer etter 5?',                  a: '6',  alt: ['6', '7', '4', '8'] },
+      { q: 'Hvor mange hjul har en sykkel?',       a: '2',  alt: ['2', '3', '4', '1'] },
+      { q: 'Hva er 2 + 1?',                        a: '3',  alt: ['3', '2', '4', '5'] },
+      { q: 'Hvor mange er det i et par?',          a: '2',  alt: ['2', '3', '1', '4'] },
+      { q: 'Hva kommer FØR 4?',                    a: '3',  alt: ['3', '2', '5', '1'] },
+    ],
+    '4-5': [
+      { q: 'Hva er 2 + 2?',                              a: '4',  alt: ['4', '3', '5', '6'] },
+      { q: 'Hva er 5 – 2?',                              a: '3',  alt: ['3', '2', '4', '1'] },
+      { q: 'Hva er 3 + 4?',                              a: '7',  alt: ['7', '6', '8', '5'] },
+      { q: 'Hvor mange dager er det i en uke?',          a: '7',  alt: ['7', '5', '6', '8'] },
+      { q: 'Hva er 10 – 3?',                             a: '7',  alt: ['7', '8', '6', '9'] },
+      { q: 'Hva er 4 + 4?',                              a: '8',  alt: ['8', '7', '9', '6'] },
+      { q: 'Hvor mange timer er det i én dag?',          a: '24', alt: ['24', '12', '10', '48'] },
+      { q: 'Hva er 6 + 3?',                              a: '9',  alt: ['9', '8', '10', '7'] },
+      { q: 'Hva er 5 + 5?',                              a: '10', alt: ['10', '9', '11', '8'] },
+      { q: 'Hva er halvparten av 8?',                    a: '4',  alt: ['4', '3', '5', '6'] },
+    ],
+    '6-7': [
+      { q: 'Hva er 5 × 3?',                             a: '15', alt: ['15', '12', '18', '10'] },
+      { q: 'Hva er 20 ÷ 4?',                            a: '5',  alt: ['5', '4', '6', '8'] },
+      { q: 'Hva er 7 × 7?',                             a: '49', alt: ['49', '42', '56', '63'] },
+      { q: 'Hvor mange måneder er det i et år?',        a: '12', alt: ['12', '10', '11', '13'] },
+      { q: 'Hva er 100 – 37?',                          a: '63', alt: ['63', '67', '73', '57'] },
+      { q: 'Hva er 8 × 6?',                             a: '48', alt: ['48', '42', '54', '36'] },
+      { q: 'Hva er 36 ÷ 6?',                            a: '6',  alt: ['6', '5', '7', '8'] },
+      { q: 'Hva er halvparten av 100?',                 a: '50', alt: ['50', '25', '75', '40'] },
+      { q: 'Hva er 9 + 8?',                             a: '17', alt: ['17', '16', '18', '15'] },
+      { q: 'Hva er 4 × 9?',                             a: '36', alt: ['36', '27', '45', '32'] },
+    ],
+  },
+
+  natur: {
+    '2-3': [
+      { q: 'Hva faller fra himmelen når det regner?',      a: 'Regndråper', alt: ['Regndråper', 'Snø', 'Sol', 'Stjerner'] },
+      { q: 'Hvilken årstid kommer det mest snø?',          a: 'Vinter',     alt: ['Vinter', 'Sommer', 'Vår', 'Høst'] },
+      { q: 'Hva lyser opp himmelen om natten?',            a: 'Månen',      alt: ['Månen', 'Solen', 'Stjerne', 'Sky'] },
+      { q: 'Hva er regnet laget av?',                      a: 'Vann',       alt: ['Vann', 'Melk', 'Juice', 'Saft'] },
+      { q: 'Hva farger bladene seg om høsten?',            a: 'Gult og rødt', alt: ['Gult og rødt', 'Blått', 'Rosa', 'Lilla'] },
+      { q: 'Hva smelter snøen til?',                       a: 'Vann',       alt: ['Vann', 'Is', 'Melk', 'Juice'] },
+      { q: 'Hva er himmelen dekket av når det regner?',    a: 'Skyer',      alt: ['Skyer', 'Fugler', 'Stjerner', 'Sol'] },
+      { q: 'I hvilken årstid blomstrer blomstene?',        a: 'Vår',        alt: ['Vår', 'Vinter', 'Høst', 'Sommer'] },
+      { q: 'Hva trenger planter for å vokse?',             a: 'Sol og vann', alt: ['Sol og vann', 'Bare vann', 'Bare sol', 'Melk'] },
+      { q: 'Hva er det hvite og myke som faller fra himmelen om vinteren?', a: 'Snø', alt: ['Snø', 'Is', 'Regn', 'Hagl'] },
+    ],
+    '4-5': [
+      { q: 'Hva kaller vi de 4 periodene av året?',           a: 'Årstider',   alt: ['Årstider', 'Måneder', 'Uker', 'Dager'] },
+      { q: 'Hva lager bier som er søtt og gult?',             a: 'Honning',    alt: ['Honning', 'Sukker', 'Saft', 'Syltetøy'] },
+      { q: 'Hva kaller vi det når vann fryser?',              a: 'Is',         alt: ['Is', 'Snø', 'Hagl', 'Dugg'] },
+      { q: 'Hva er det grønne stoffet i planter som gir dem farge?', a: 'Klorofyll', alt: ['Klorofyll', 'Protein', 'Sukker', 'Vann'] },
+      { q: 'Hva er den største planeten i solsystemet?',      a: 'Jupiter',    alt: ['Jupiter', 'Saturn', 'Mars', 'Venus'] },
+      { q: 'Hva kaller vi vannet i havet?',                   a: 'Saltvann',   alt: ['Saltvann', 'Ferskvann', 'Springvann', 'Regnvann'] },
+      { q: 'Hva heter det når en sommerfugl forvandler seg fra larve?', a: 'Metamorfose', alt: ['Metamorfose', 'Vekst', 'Forvandling', 'Puppe'] },
+      { q: 'Hva kaller vi stedet der en elv møter havet?',   a: 'Munning',    alt: ['Munning', 'Kilde', 'Bukt', 'Fjord'] },
+      { q: 'Hva er Jordens naturlige satellitt?',             a: 'Månen',      alt: ['Månen', 'Solen', 'Mars', 'Venus'] },
+      { q: 'Hva kaller vi regn som faller som iskuler?',     a: 'Hagl',       alt: ['Hagl', 'Snø', 'Slaps', 'Frost'] },
+    ],
+    '6-7': [
+      { q: 'Hvilken planet er nærmest solen?',               a: 'Merkur',     alt: ['Merkur', 'Venus', 'Jord', 'Mars'] },
+      { q: 'Hva produserer planter gjennom fotosyntesen?',   a: 'Oksygen',    alt: ['Oksygen', 'Karbondioksid', 'Nitrogen', 'Hydrogen'] },
+      { q: 'Hva kaller vi dyr uten ryggrad?',                a: 'Virvelløse dyr', alt: ['Virvelløse dyr', 'Virveldyr', 'Amfibier', 'Krypdyr'] },
+      { q: 'Hva heter laget rundt Jorda som beskytter oss?', a: 'Atmosfæren', alt: ['Atmosfæren', 'Ozonlaget', 'Magnetfeltet', 'Stratosfæren'] },
+      { q: 'Hva kaller vi grensen mellom to kontinenter under vann?', a: 'Midthavsrygg', alt: ['Midthavsrygg', 'Kontinentalsokkel', 'Havgrøft', 'Undersjøisk fjell'] },
+      { q: 'Hva er den vanligste gassen i Jordens atmosfære?', a: 'Nitrogen',  alt: ['Nitrogen', 'Oksygen', 'Karbondioksid', 'Argon'] },
+      { q: 'Hva kaller vi en stein som faller fra verdensrommet og treffer Jorda?', a: 'Meteoritt', alt: ['Meteoritt', 'Meteor', 'Komet', 'Asteroid'] },
+      { q: 'Hva heter havstrømmene som varmer opp Europa?',  a: 'Golfstrømmen', alt: ['Golfstrømmen', 'Japanstrømmen', 'Nordpolen', 'Passat'] },
+      { q: 'Hva kaller vi stedet der jordskorpen beveger seg og kan skape jordskjelv?', a: 'Tektoniske plater', alt: ['Tektoniske plater', 'Vulkaner', 'Forkastninger', 'Riftdaler'] },
+      { q: 'Hva er det vitenskapelige navnet for Nordlyset?', a: 'Aurora borealis', alt: ['Aurora borealis', 'Aurora australis', 'Solstorm', 'Ionosfære'] },
+    ],
+  },
+
+  mat: {
+    '2-3': [
+      { q: 'Hvilken farge er en banan?',                   a: 'Gul',      alt: ['Gul', 'Rød', 'Grønn', 'Blå'] },
+      { q: 'Hva drikker vi som kommer fra kuer?',          a: 'Melk',     alt: ['Melk', 'Juice', 'Vann', 'Saft'] },
+      { q: 'Hvilken frukt er rød og rund?',                a: 'Eple',     alt: ['Eple', 'Banan', 'Appelsin', 'Drue'] },
+      { q: 'Hva spiser vi til frokost som er varmt og rundt?', a: 'Pannekake', alt: ['Pannekake', 'Salat', 'Suppe', 'Pizza'] },
+      { q: 'Hva er gult og søtt at smøre på brød?',       a: 'Honning',  alt: ['Honning', 'Smør', 'Syltetøy', 'Ost'] },
+      { q: 'Hvilken grønnsak er oransje og lang?',         a: 'Gulrot',   alt: ['Gulrot', 'Potet', 'Tomat', 'Agurk'] },
+      { q: 'Hva heter det søte vi spiser etter middagen?', a: 'Dessert',  alt: ['Dessert', 'Forrett', 'Lunsj', 'Snack'] },
+      { q: 'Hva lager vi av melk, fløte og sukker som er kaldt og godt?', a: 'Is', alt: ['Is', 'Sjokolade', 'Kake', 'Pudding'] },
+      { q: 'Hva slags mat er rund, flat og har ost på toppen?', a: 'Pizza', alt: ['Pizza', 'Pannekake', 'Tortilla', 'Brød'] },
+      { q: 'Hva spiser vi i skallet som er gul og bøyd?',  a: 'Banan',   alt: ['Banan', 'Appelsin', 'Eple', 'Pære'] },
+    ],
+    '4-5': [
+      { q: 'Hva lages brød av?',                          a: 'Mel og gjær', alt: ['Mel og gjær', 'Sukker og smør', 'Melk og egg', 'Salt og vann'] },
+      { q: 'Hva er det 12 av i et dusin?',               a: '12',          alt: ['12', '10', '6', '8'] },
+      { q: 'Hva lages ost av?',                           a: 'Melk',        alt: ['Melk', 'Fløte', 'Smør', 'Egg'] },
+      { q: 'Hva kaller vi den grønne frukten med store frø inni?', a: 'Vannmelon', alt: ['Vannmelon', 'Avokado', 'Kiwi', 'Lime'] },
+      { q: 'Hva lages sjokolade av?',                    a: 'Kakaobønner', alt: ['Kakaobønner', 'Kaffebønner', 'Vaniljebønner', 'Sukker'] },
+      { q: 'Hva heter det når vi baker i ovnen med egg, mel og sukker?', a: 'Kake', alt: ['Kake', 'Brød', 'Bolle', 'Kjeks'] },
+      { q: 'Hvilken grønnsak er grønn og ligner et tre?', a: 'Brokkoli',  alt: ['Brokkoli', 'Agurk', 'Erter', 'Spinat'] },
+      { q: 'Hva er det søte, hvite stoffet vi putter i kaker?', a: 'Sukker', alt: ['Sukker', 'Salt', 'Mel', 'Bakepulver'] },
+      { q: 'Hva lager vi av tomater, olje og urter som vi har på pasta?', a: 'Tomatsaus', alt: ['Tomatsaus', 'Pesto', 'Bechamel', 'Ketchup'] },
+      { q: 'Hvilken frukt er oransje og full av C-vitamin?', a: 'Appelsin', alt: ['Appelsin', 'Mango', 'Papaya', 'Fersken'] },
+    ],
+    '6-7': [
+      { q: 'Hvilket land er pizza opprinnelig fra?',          a: 'Italia',      alt: ['Italia', 'Frankrike', 'Spania', 'Hellas'] },
+      { q: 'Hva lages sushi av?',                            a: 'Ris og fisk', alt: ['Ris og fisk', 'Brød og kjøtt', 'Nudler og grønt', 'Mais og ost'] },
+      { q: 'Hva kaller vi den kjemiske prosessen når brød hever seg?', a: 'Gjæring', alt: ['Gjæring', 'Steking', 'Koking', 'Baking'] },
+      { q: 'Hvilket vitamin er det mye av i appelsin?',      a: 'C-vitamin',   alt: ['C-vitamin', 'A-vitamin', 'D-vitamin', 'B-vitamin'] },
+      { q: 'Hva lages tofu av?',                             a: 'Soyabønner',  alt: ['Soyabønner', 'Hvete', 'Mais', 'Ris'] },
+      { q: 'Hva er hovedingrediens i guacamole?',            a: 'Avokado',     alt: ['Avokado', 'Tomat', 'Løk', 'Hvitløk'] },
+      { q: 'Hvilken land er kjent for sjokolade og ost?',   a: 'Sveits',      alt: ['Sveits', 'Belgia', 'Frankrike', 'Nederland'] },
+      { q: 'Hva kaller vi teknikken å tørke mat for å bevare den lenge?', a: 'Tørking', alt: ['Tørking', 'Salting', 'Røyking', 'Hermetisering'] },
+      { q: 'Hva er hummus laget av?',                        a: 'Kikerter',    alt: ['Kikerter', 'Linser', 'Bønner', 'Erter'] },
+      { q: 'Hvilket land er kjent for å ha funnet opp hamburger?', a: 'USA',   alt: ['USA', 'Tyskland', 'England', 'Australia'] },
+    ],
+  },
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  skjerm: 'velkomst',   // 'velkomst' | 'alder' | 'tema' | 'quiz' | 'resultat'
+  alder: null,
+  tema: null,
+  sporsmalListe: [],
+  indeks: 0,
+  poeng: 0,
+  svart: false,
+};
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+const app = document.getElementById('app');
+
+function render() {
+  app.innerHTML = '';
+  if      (state.skjerm === 'velkomst') renderVelkomst();
+  else if (state.skjerm === 'alder')    renderAlder();
+  else if (state.skjerm === 'tema')     renderTema();
+  else if (state.skjerm === 'quiz')     renderQuiz();
+  else if (state.skjerm === 'resultat') renderResultat();
+}
+
+function renderVelkomst() {
+  app.innerHTML = `
+    <h1>🌟 Barnas Quiz 🌟</h1>
+    <p class="subtitle">Lær og ha det gøy med morsomme spørsmål!</p>
+    <div style="font-size:5rem;text-align:center;margin:24px 0">🎉</div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz!</button>
+  `;
+}
+
+function renderAlder() {
+  let html = `<h2>Hvor gammel er du?</h2>`;
+  html += `<div class="age-grid">`;
+  aldersgrupper.forEach(ag => {
+    html += `<button class="age-btn" onclick="velgAlder('${ag.id}')">${ag.label}</button>`;
+  });
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderTema() {
+  let html = `<h2>Velg et tema!</h2>`;
+  html += `<div class="theme-grid">`;
+  temaer.forEach(t => {
+    html += `<button class="theme-btn" onclick="velgTema('${t.id}')">
+      <span class="emoji">${t.emoji}</span>${t.navn}
+    </button>`;
+  });
+  html += `</div>`;
+  html += `<button class="back-link" onclick="gaTilbakeTilAlder()">← Endre alder</button>`;
+  app.innerHTML = html;
+}
+
+function renderQuiz() {
+  const sp = state.sporsmalListe[state.indeks];
+  const antall = state.sporsmalListe.length;
+  const fremgang = ((state.indeks) / antall) * 100;
+
+  let html = `
+    <div class="progress-label">Spørsmål ${state.indeks + 1} av ${antall}</div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:${fremgang}%"></div></div>
+    <div class="question-text">${sp.q}</div>
+    <div class="options-grid" id="alternativer">
+  `;
+
+  // Bland svaralternativene
+  const blandede = [...sp.alt].sort(() => Math.random() - 0.5);
+  blandede.forEach(alt => {
+    html += `<button class="option-btn" onclick="velgSvar(this, '${escapeAttr(alt)}', '${escapeAttr(sp.a)}')">${alt}</button>`;
+  });
+
+  html += `</div><div class="feedback" id="feedback"></div>`;
+  app.innerHTML = html;
+}
+
+function renderResultat() {
+  const antall = state.sporsmalListe.length;
+  const prosent = Math.round((state.poeng / antall) * 100);
+  let emoji, melding;
+
+  if (prosent === 100)       { emoji = '🏆'; melding = 'Perfekt! Du er en superstjerne!'; }
+  else if (prosent >= 80)    { emoji = '🌟'; melding = 'Fantastisk jobbet! Nesten perfekt!'; }
+  else if (prosent >= 60)    { emoji = '😊'; melding = 'Bra jobbet! Du er flink!'; }
+  else if (prosent >= 40)    { emoji = '💪'; melding = 'Godt forsøkt! Øv litt mer!'; }
+  else                       { emoji = '📚'; melding = 'Ikke gi opp! Prøv igjen!'; }
+
+  app.innerHTML = `
+    <div class="result-emoji">${emoji}</div>
+    <div class="result-score">${state.poeng} / ${antall}</div>
+    <p class="result-msg">${melding}</p>
+    <div style="text-align:center;font-size:2.5rem;margin-bottom:20px">
+      <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+    </div>
+    <button class="btn btn-primary" onclick="spillSammeTema()">Spill igjen – samme tema</button>
+    <button class="btn btn-secondary" onclick="velgNyttTema()">Velg nytt tema</button>
+    <button class="back-link" onclick="startFraBegynnelsen()">← Til starten</button>
+  `;
+}
+
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+function escapeAttr(s) {
+  return s.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+function bland(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────────────────
+function startQuiz() {
+  state.skjerm = 'alder';
+  render();
+}
+
+function velgAlder(id) {
+  state.alder = id;
+  state.skjerm = 'tema';
+  render();
+}
+
+function velgTema(id) {
+  state.tema = id;
+  state.indeks = 0;
+  state.poeng = 0;
+  state.svart = false;
+  state.sporsmalListe = bland(sporsmal[id][state.alder]);
+  state.skjerm = 'quiz';
+  render();
+}
+
+function velgSvar(knapp, valgt, riktig) {
+  if (state.svart) return;
+  state.svart = true;
+
+  const alle = document.querySelectorAll('.option-btn');
+  alle.forEach(k => {
+    k.disabled = true;
+    if (k.textContent.trim() === riktig) k.classList.add('correct');
+  });
+
+  const feedback = document.getElementById('feedback');
+
+  if (valgt === riktig) {
+    state.poeng++;
+    knapp.classList.add('correct');
+    feedback.textContent = '✅ Riktig! Fantastisk!';
+    feedback.className = 'feedback right';
+  } else {
+    knapp.classList.add('wrong');
+    feedback.textContent = `❌ Nesten! Riktig svar: ${riktig}`;
+    feedback.className = 'feedback wrong';
+  }
+
+  setTimeout(() => {
+    state.indeks++;
+    state.svart = false;
+    if (state.indeks >= state.sporsmalListe.length) {
+      state.skjerm = 'resultat';
+    }
+    render();
+  }, 3000);
+}
+
+function spillSammeTema() {
+  velgTema(state.tema);
+}
+
+function velgNyttTema() {
+  state.skjerm = 'tema';
+  render();
+}
+
+function startFraBegynnelsen() {
+  state.skjerm = 'velkomst';
+  state.alder = null;
+  state.tema = null;
+  render();
+}
+
+function gaTilbakeTilAlder() {
+  state.skjerm = 'alder';
+  render();
+}
+
+// ─── START ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
