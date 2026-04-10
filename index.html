@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Barnas Quiz</title>
+  <title>Barnas quiz</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -36,28 +36,59 @@
     h2 { font-size: 1.5rem; color: #4a2d8f; text-align: center; margin-bottom: 24px; }
     .subtitle { text-align: center; color: #888; margin-bottom: 28px; font-size: 1.05rem; }
 
-    /* Age buttons */
-    .age-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    /* Alder slider */
+    .alder-display {
+      text-align: center;
+      margin: 16px 0 8px;
     }
-
-    .age-btn {
-      padding: 20px;
-      border: none;
-      border-radius: 18px;
-      font-size: 1.4rem;
-      font-weight: bold;
+    .alder-tall {
+      font-size: 5rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, #667eea, #f5576c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .alder-aar {
+      font-size: 1.3rem;
+      color: #888;
+      margin-top: 2px;
+    }
+    .slider-wrap {
+      padding: 12px 8px 24px;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 14px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #f5576c, #667eea, #43e97b);
+      outline: none;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      color: white;
     }
-    .age-btn:nth-child(1) { background: linear-gradient(135deg, #f093fb, #f5576c); }
-    .age-btn:nth-child(2) { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-    .age-btn:nth-child(3) { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-    .age-btn:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-    .age-btn:active { transform: scale(0.97); }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid #667eea;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #aaa;
+      padding: 0 4px;
+      margin-top: 6px;
+    }
 
     /* Theme buttons */
     .theme-grid {
@@ -153,15 +184,6 @@
       animation: pulseGreen 0.5s ease;
       position: relative;
     }
-    .option-btn.correct::after {
-      content: '✅ RIKTIG SVAR!';
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #1a6640;
-      letter-spacing: 0.5px;
-      margin-top: 6px;
-    }
     @keyframes pulseGreen {
       0%   { transform: scale(1); }
       50%  { transform: scale(1.1); }
@@ -173,14 +195,6 @@
       color: #8b1a1a;
       border-width: 4px;
       position: relative;
-    }
-    .option-btn.wrong::after {
-      content: '❌ Feil';
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #c0392b;
-      margin-top: 4px;
     }
     .option-btn:disabled { cursor: default; }
 
@@ -249,17 +263,17 @@
 // ─── QUIZ DATA ───────────────────────────────────────────────────────────────
 const temaer = [
   { id: 'dyr',    navn: 'Dyr',             emoji: '🐾' },
-  { id: 'farger', navn: 'Farger & Former', emoji: '🎨' },
-  { id: 'tall',   navn: 'Tall & Matte',    emoji: '🔢' },
+  { id: 'farger', navn: 'Farger & former', emoji: '🎨' },
+  { id: 'tall',   navn: 'Tall & matte',    emoji: '🔢' },
   { id: 'natur',  navn: 'Natur',           emoji: '🌿' },
   { id: 'mat',    navn: 'Mat',             emoji: '🍎' },
 ];
 
-const aldersgrupper = [
-  { id: '2-3', label: '👶  2 – 3 år' },
-  { id: '4-5', label: '🧒  4 – 5 år' },
-  { id: '6-7', label: '🧑  6 – 7 år' },
-];
+function alderTilNivå(alder) {
+  if (alder <= 3) return '2-3';
+  if (alder <= 5) return '4-5';
+  return '6-7';
+}
 
 const sporsmal = {
   dyr: {
@@ -483,21 +497,45 @@ function render() {
 
 function renderVelkomst() {
   app.innerHTML = `
-    <h1>🌟 Barnas Quiz 🌟</h1>
+    <h1>🌟 Barnas quiz 🌟</h1>
     <p class="subtitle">Lær og ha det gøy med morsomme spørsmål!</p>
     <div style="font-size:5rem;text-align:center;margin:24px 0">🎉</div>
-    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz!</button>
+    <button class="btn btn-primary" onclick="startQuiz()">Start quiz!</button>
   `;
 }
 
 function renderAlder() {
-  let html = `<h2>Hvor gammel er du?</h2>`;
-  html += `<div class="age-grid">`;
-  aldersgrupper.forEach(ag => {
-    html += `<button class="age-btn" onclick="velgAlder('${ag.id}')">${ag.label}</button>`;
-  });
-  html += `</div>`;
-  app.innerHTML = html;
+  const alder = state.alder || 5;
+  const emojier = { 2:'👶', 3:'🧒', 4:'🧒', 5:'🧒', 6:'🧑', 7:'🧑' };
+  app.innerHTML = `
+    <h2>Hvor gammel er du?</h2>
+    <div class="alder-display">
+      <div class="alder-tall" id="alderTall">${alder}</div>
+      <div class="alder-aar">${emojier[alder]} år</div>
+    </div>
+    <div class="slider-wrap">
+      <input type="range" min="2" max="7" value="${alder}" id="alderSlider"
+        oninput="oppdaterAlder(this.value)" />
+      <div class="slider-labels">
+        <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="bekreftAlder()">Velg tema →</button>
+  `;
+}
+
+function oppdaterAlder(val) {
+  const emojier = { 2:'👶', 3:'🧒', 4:'🧒', 5:'🧒', 6:'🧑', 7:'🧑' };
+  const n = parseInt(val);
+  document.getElementById('alderTall').closest('.alder-display').innerHTML =
+    `<div class="alder-tall" id="alderTall">${n}</div><div class="alder-aar">${emojier[n]} år</div>`;
+  state.alder = n;
+}
+
+function bekreftAlder() {
+  if (!state.alder) state.alder = 5;
+  state.skjerm = 'tema';
+  render();
 }
 
 function renderTema() {
@@ -509,7 +547,7 @@ function renderTema() {
     </button>`;
   });
   html += `</div>`;
-  html += `<button class="back-link" onclick="gaTilbakeTilAlder()">← Endre alder</button>`;
+  html += `<button class="back-link" onclick="gaTilbakeTilAlder()">← Endre alder (${state.alder} år)</button>`;
   app.innerHTML = html;
 }
 
@@ -556,6 +594,7 @@ function renderResultat() {
     <button class="btn btn-primary" onclick="spillSammeTema()">Spill igjen – samme tema</button>
     <button class="btn btn-secondary" onclick="velgNyttTema()">Velg nytt tema</button>
     <button class="back-link" onclick="startFraBegynnelsen()">← Til starten</button>
+
   `;
 }
 
@@ -580,12 +619,13 @@ function velgAlder(id) {
   render();
 }
 
+
 function velgTema(id) {
   state.tema = id;
   state.indeks = 0;
   state.poeng = 0;
   state.svart = false;
-  state.sporsmalListe = bland(sporsmal[id][state.alder]);
+  state.sporsmalListe = bland(sporsmal[id][alderTilNivå(state.alder)]);
   state.skjerm = 'quiz';
   render();
 }
@@ -602,15 +642,18 @@ function velgSvar(knapp, valgt, riktig) {
 
   const feedback = document.getElementById('feedback');
 
+  let ventetid;
   if (valgt === riktig) {
     state.poeng++;
     knapp.classList.add('correct');
-    feedback.textContent = '✅ Riktig! Fantastisk!';
+    feedback.textContent = 'Riktig';
     feedback.className = 'feedback right';
+    ventetid = 1200;
   } else {
     knapp.classList.add('wrong');
-    feedback.textContent = `❌ Nesten! Riktig svar: ${riktig}`;
+    feedback.innerHTML = `Riktig svar: <strong>${riktig}</strong>`;
     feedback.className = 'feedback wrong';
+    ventetid = 4500;
   }
 
   setTimeout(() => {
@@ -620,7 +663,7 @@ function velgSvar(knapp, valgt, riktig) {
       state.skjerm = 'resultat';
     }
     render();
-  }, 3000);
+  }, ventetid);
 }
 
 function spillSammeTema() {
